@@ -1,0 +1,33 @@
+#!/bin/bash
+
+output="/var/www/html/$(date +%C%y%m%d)"
+logfile="/var/log/packer/packer.log"
+
+target=$1
+json="ubuntu/${target}.json"
+
+if [ ! -f "${json}" ]; then
+  echo "$(date): ${target} json not exist"
+  exit 1
+fi
+
+mkdir -p /var/log/packer
+mkdir -p ${output}/${target}
+
+rm -rvf output*
+
+if [ -d "${output}/${target}" ]; then
+  rm -rvf ${output}/${target}/*
+
+  export PACKER_LOG=1
+  export PACKER_LOG_PATH="/var/log/packer/packer-${target}.log"
+
+  /opt/packer build ${json}
+  if [ $? -ne 0 ]; then
+    echo "$(date): ${target} build failed"
+    exit 1
+  fi
+  sleep 30
+
+  find . -name "*.qcow2" -exec mv {} ${output}/${target} \;
+fi

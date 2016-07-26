@@ -1,0 +1,121 @@
+{
+    "variables": {
+        "hostname_1404": "ubuntu-server-trusty",
+        "iso_path_1404": "http://releases.ubuntu.com/releases/trusty/ubuntu-14.04.4-server-amd64.iso",
+        "iso_checksum_1404": "07e4bb5569814eab41fafac882ba127893e3ff0bdb7ec931c9b2d040e3e94e7a",
+
+        "hostname_1204": "ubuntu-server-precise",
+        "iso_path_1204": "http://releases.ubuntu.com/releases/precise/ubuntu-12.04.5-server-amd64.iso",
+        "iso_checksum_1204": "af224223de99e2a730b67d7785b657f549be0d63221188e105445f75fb8305c9",
+
+        "iso_checksum_type": "sha256",
+
+        "username": "ubuntu",
+        "password": "tops3cr3t",
+
+        "http_directory": "http"
+    },
+    "min_packer_version": "0.10.1",
+    "builders":
+    [
+        {
+            "name": "builder_{{user `hostname_1404`}}",
+
+            "type": "qemu",
+            "format": "qcow2",
+            "accelerator": "kvm",
+            "disk_size": "5000",
+            "disk_compression": true,
+
+            "headless": true,
+
+            "iso_url": "{{user `iso_path_1404`}}",
+            "iso_checksum": "{{user `iso_checksum_1404`}}",
+            "iso_checksum_type": "{{user `iso_checksum_type`}}",
+
+            "http_directory": "{{user `http_directory`}}",
+
+            "vm_name": "{{user `hostname_1404`}}.qcow2",
+            "ssh_username": "{{user `username`}}",
+            "ssh_password": "{{user `password`}}",
+            "ssh_wait_timeout": "60m",
+
+            "shutdown_command": "echo '{{user `password`}}' | sudo -S shutdown -P now",
+
+            "boot_wait": "3s",
+            "boot_command": [
+                "<esc><esc><enter><wait><wait>",
+                "/install/vmlinuz noapic ",
+                "preseed/url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/preseed.cfg ",
+                "debian-installer=en_US auto locale=en_US kbd-chooser/method=us ",
+                "hostname={{user `hostname_1404` }} ",
+                "fb=false debconf/frontend=noninteractive ",
+                "keyboard-configuration/modelcode=SKIP keyboard-configuration/layout=USA ",
+                "passwd/user-fullname={{user `username`}} ",
+                "passwd/user-password-again={{user `password`}} ",
+                "passwd/user-password={{user `password`}} ",
+                "passwd/username={{user `username`}} ",
+                "initrd=/install/initrd.gz -- <enter>"
+            ]
+        },
+        {
+            "name": "builder_{{user `hostname_1204`}}",
+
+            "type": "qemu",
+            "format": "qcow2",
+            "accelerator": "kvm",
+            "disk_size": "5000",
+            "disk_compression": true,
+
+            "headless": true,
+
+            "iso_url": "{{user `iso_path_1204`}}",
+            "iso_checksum": "{{user `iso_checksum_1204`}}",
+            "iso_checksum_type": "{{user `iso_checksum_type`}}",
+
+            "http_directory": "{{user `http_directory`}}",
+
+            "vm_name": "{{user `hostname_1204`}}.qcow2",
+            "ssh_username": "{{user `username`}}",
+            "ssh_password": "{{user `password`}}",
+            "ssh_wait_timeout": "60m",
+
+            "shutdown_command": "echo '{{user `password`}}' | sudo -S shutdown -P now",
+
+            "boot_wait": "3s",
+            "boot_command": [
+                "<esc><esc><enter><wait><wait>",
+                "/install/vmlinuz noapic ",
+                "preseed/url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/preseed.cfg ",
+                "debian-installer=en_US auto locale=en_US kbd-chooser/method=us ",
+                "hostname={{user `hostname_1204` }} ",
+                "fb=false debconf/frontend=noninteractive ",
+                "keyboard-configuration/modelcode=SKIP keyboard-configuration/layout=USA ",
+                "passwd/user-fullname={{user `username`}} ",
+                "passwd/user-password-again={{user `password`}} ",
+                "passwd/user-password={{user `password`}} ",
+                "passwd/username={{user `username`}} ",
+                "initrd=/install/initrd.gz -- <enter>"
+            ]
+        }
+    ],
+    "provisioners": [
+        {
+            "type": "shell",
+            "execute_command": "echo '{{user `password`}}' | {{.Vars}} sudo -E -S bash '{{.Path}}'",
+            "pause_before": "5s",
+            "scripts": [
+                "scripts/provision.sh",
+                "scripts/cleanup.sh"
+            ]
+        }
+    ],
+    "post-processors": [
+        {
+            "type": "shell-local",
+            "scripts": [
+                "scripts/minify.sh"
+            ]
+        }
+    ]
+}

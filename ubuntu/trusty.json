@@ -1,0 +1,77 @@
+{
+    "variables": {
+        "hostname": "ubuntu-server-trusty",
+        "iso_path": "http://releases.ubuntu.com/releases/trusty/ubuntu-14.04.5-server-amd64.iso",
+        "iso_checksum": "dde07d37647a1d2d9247e33f14e91acb10445a97578384896b4e1d985f754cc1",
+
+        "iso_checksum_type": "sha256",
+
+        "username": "ubuntu",
+        "password": "tops3cr3t",
+
+        "http_directory": "http"
+    },
+    "min_packer_version": "0.10.1",
+    "builders":
+    [
+        {
+            "name": "builder_{{user `hostname`}}",
+
+            "type": "qemu",
+            "format": "qcow2",
+            "accelerator": "kvm",
+            "disk_size": "5000",
+            "disk_compression": true,
+
+            "headless": true,
+
+            "iso_url": "{{user `iso_path`}}",
+            "iso_checksum": "{{user `iso_checksum`}}",
+            "iso_checksum_type": "{{user `iso_checksum_type`}}",
+
+            "http_directory": "{{user `http_directory`}}",
+
+            "vm_name": "{{user `hostname`}}.qcow2",
+            "ssh_username": "{{user `username`}}",
+            "ssh_password": "{{user `password`}}",
+            "ssh_wait_timeout": "60m",
+
+            "shutdown_command": "echo '{{user `password`}}' | sudo -S shutdown -P now",
+
+            "boot_wait": "3s",
+            "boot_command": [
+                "<esc><esc><enter><wait><wait>",
+                "/install/vmlinuz noapic ",
+                "preseed/url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/preseed.cfg ",
+                "debian-installer=en_US auto locale=en_US kbd-chooser/method=us ",
+                "hostname={{user `hostname` }} ",
+                "fb=false debconf/frontend=noninteractive ",
+                "keyboard-configuration/modelcode=SKIP keyboard-configuration/layout=USA ",
+                "passwd/user-fullname={{user `username`}} ",
+                "passwd/user-password-again={{user `password`}} ",
+                "passwd/user-password={{user `password`}} ",
+                "passwd/username={{user `username`}} ",
+                "initrd=/install/initrd.gz -- <enter>"
+            ]
+        }
+    ],
+    "provisioners": [
+        {
+            "type": "shell",
+            "execute_command": "echo '{{user `password`}}' | {{.Vars}} sudo -E -S bash '{{.Path}}'",
+            "pause_before": "5s",
+            "scripts": [
+                "scripts/provision.sh",
+                "scripts/cleanup.sh"
+            ]
+        }
+    ],
+    "post-processors": [
+        {
+            "type": "shell-local",
+            "scripts": [
+                "scripts/minify.sh"
+            ]
+        }
+    ]
+}

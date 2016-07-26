@@ -1,0 +1,94 @@
+{
+    "variables": {
+        "hostname": "ubuntu-server-trusty",
+        "iso_path": "http://releases.ubuntu.com/releases/trusty/ubuntu-14.04.5-server-amd64.iso",
+        "iso_checksum": "dde07d37647a1d2d9247e33f14e91acb10445a97578384896b4e1d985f754cc1",
+
+        "iso_checksum_type": "sha256",
+
+        "username": "ubuntu",
+        "password": "tops3cr3t",
+
+        "esxi_host": "192.168.0.100",
+        "esxi_type": "esx5",
+
+        "esxi_username": "root",
+        "esxi_password": "sup3rs3cr3t",
+
+        "esxi_datastore": "datastore1",
+        "esxi_disk_type": "thin",
+        "esxi_flavor": "linux",
+
+        "http_directory": "http"
+    },
+    "min_packer_version": "0.10.1",
+    "builders":
+    [
+        {
+            "name": "builder_{{user `hostname`}}",
+
+            "type": "vmware-iso",
+            "format": "ova",
+
+            "disk_size": "5000",
+
+            "headless": true,
+
+            "iso_url": "{{user `iso_path`}}",
+            "iso_checksum": "{{user `iso_checksum`}}",
+            "iso_checksum_type": "{{user `iso_checksum_type`}}",
+
+            "http_directory": "{{user `http_directory`}}",
+
+            "vm_name": "{{user `hostname`}}",
+            "ssh_username": "{{user `username`}}",
+            "ssh_password": "{{user `password`}}",
+            "ssh_wait_timeout": "60m",
+
+            "shutdown_command": "echo '{{user `password`}}' | sudo -S shutdown -P now",
+
+            "disk_type_id": "{{user `esxi_disk_type`}}",
+            "remote_host": "{{user `esxi_host`}}",
+            "remote_datastore": "{{user `esxi_datastore`}}",
+            "remote_username": "{{user `esxi_username`}}",
+            "remote_password": "{{user `esxi_password`}}",
+            "remote_type": "{{user `esxi_type`}}",
+            "tools_upload_flavor": "{{user `esxi_flavor`}}",
+            "guest_os_type": "ubuntu-64",
+
+            "vmx_data": {
+                "memsize": "512",
+                "numvcpus": "1",
+                "cpuid.coresPerSocket": "1",
+                "ethernet0.networkName": "VM Network"
+            },
+
+            "boot_wait": "3s",
+            "boot_command": [
+                "<esc><esc><enter><wait><wait>",
+                "/install/vmlinuz noapic ",
+                "preseed/url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/preseed.cfg ",
+                "debian-installer=en_US auto locale=en_US kbd-chooser/method=us ",
+                "hostname={{user `hostname` }} ",
+                "fb=false debconf/frontend=noninteractive ",
+                "keyboard-configuration/modelcode=SKIP keyboard-configuration/layout=USA ",
+                "passwd/user-fullname={{user `username`}} ",
+                "passwd/user-password-again={{user `password`}} ",
+                "passwd/user-password={{user `password`}} ",
+                "passwd/username={{user `username`}} ",
+                "initrd=/install/initrd.gz -- <enter>"
+            ]
+        }
+    ],
+    "provisioners": [
+        {
+            "type": "shell",
+            "execute_command": "echo '{{user `password`}}' | {{.Vars}} sudo -E -S bash '{{.Path}}'",
+            "pause_before": "5s",
+            "scripts": [
+                "scripts/provision.sh",
+                "scripts/cleanup.sh"
+            ]
+        }
+    ]
+}

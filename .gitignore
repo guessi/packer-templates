@@ -1,0 +1,3 @@
+*.qcow2
+output_directory/
+packer_cache/

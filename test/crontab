@@ -1,0 +1,3 @@
+25 0 * * * root bash -c 'pushd /opt/build && ./test/build precise'
+25 1 * * * root bash -c 'pushd /opt/build && ./test/build trusty'
+25 2 * * * root bash -c 'pushd /opt/build && ./test/build xenial'
