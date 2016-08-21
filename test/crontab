@@ -1,3 +1,7 @@
-25 0 * * * root bash -c 'pushd /opt/build && ./test/build precise'
-25 1 * * * root bash -c 'pushd /opt/build && ./test/build trusty'
-25 2 * * * root bash -c 'pushd /opt/build && ./test/build xenial'
+# weekly build
+25 0 * * 5 root bash -c 'pushd /opt/build && ./test/build precise'
+25 1 * * 5 root bash -c 'pushd /opt/build && ./test/build trusty'
+25 2 * * 5 root bash -c 'pushd /opt/build && ./test/build xenial'
+
+# cleanup old builds
+15 0 1 * * root find /var/www/html/templates -type d -mtime +100 -delete
