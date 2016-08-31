@@ -26,7 +26,6 @@ Packer templates for creating **version control** images
 
 * ova
 * qcow2
-* box (work in process)
 
 
 ### Reference
