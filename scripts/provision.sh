@@ -1,13 +1,11 @@
 #!/bin/bash
 
 if [ "$(lsb_release -sc)" = "xenial" ]; then
-  KERNEL_VERSION="4.4.0-34"
+  KERNEL_VERSION="xenial"
 elif [ "$(lsb_release -sc)" = "trusty" ]; then
-  KERNEL_VERSION="4.4.0-34"
+  KERNEL_VERSION="xenial"
 elif [ "$(lsb_release -sc)" = "precise" ]; then
-  KERNEL_VERSION="3.13.0-93"
-else
-  KERNEL_VERSION=
+  KERNEL_VERSION="trusty"
 fi
 
 # general
@@ -21,13 +19,12 @@ if [ -n "${KERNEL_VERSION}" ]; then
   dpkg -l | awk '/linux-(image|headers|generic|virtual|signed)/{print$2}' | xargs apt-get purge -y
 
   if [ "$(lsb_release -sc)" != "precise" ]; then
-    EXTRA="linux-image-extra-${KERNEL_VERSION}-generic"
+    EXTRA="linux-image-extra-virtual-lts-${KERNEL_VERSION}"
   fi
 
   apt-get install -qy \
-    linux-headers-${KERNEL_VERSION} \
-    linux-headers-${KERNEL_VERSION}-generic \
-    linux-image-${KERNEL_VERSION}-generic ${EXTRA}
+    linux-image-generic-lts-${KERNEL_VERSION} \
+    linux-headers-generic-lts-${KERNEL_VERSION} ${EXTRA}
 fi
 
 # upgrade
