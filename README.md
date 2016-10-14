@@ -5,7 +5,7 @@ Packer templates for creating **version control** images
 
 ### Prerequisites
 
-* Packer (>= 0.10.1)
+* Packer (>= 0.10.2)
 * any Linux distribution
 
 

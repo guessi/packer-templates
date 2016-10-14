@@ -7,7 +7,7 @@ fi
 
 apt-get install -y unzip
 
-VERSION="0.10.1"
+VERSION="0.10.2"
 wget https://releases.hashicorp.com/packer/${VERSION}/packer_${VERSION}_linux_amd64.zip -qO /tmp/packer.zip
 pushd /opt >/dev/null
 unzip -o /tmp/packer.zip
