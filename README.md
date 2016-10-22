@@ -13,7 +13,7 @@ Packer templates for creating **version control** images
 ### Usage
 
     $ sudo ./setup.sh
-    $ sudo /opt/packer build <json>
+    $ /opt/packer build <json>
 
 
 ### Support OS distributions
