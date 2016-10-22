@@ -5,9 +5,20 @@ if [ "$(whoami)" != "root" ]; then
   exit 1
 fi
 
-VERSION="0.10.2"
-wget https://releases.hashicorp.com/packer/${VERSION}/packer_${VERSION}_linux_amd64.zip -qO /tmp/packer.zip
-pushd /opt >/dev/null
-unzip -o /tmp/packer.zip
-popd >/dev/null
-rm -vf /tmp/packer.zip
+if [ -d "/opt/packer" ]; then
+  echo "Error, target '/opt/packer' existed, and it is a directory"
+  exit 1
+fi
+
+PACKER_VERSION="${PACKER_VERSION:-0.10.2}"
+if [ -x "/opt/packer" ] && [ "${PACKER_VERSION}" = "$(/opt/packer --version)" ]; then
+  echo "Skip, packer ${PACKER_VERSION} has already existed"
+  exit 0
+fi
+
+echo "Setup packer ${PACKER_VERSION} in process... "
+wget https://releases.hashicorp.com/packer/${PACKER_VERSION}/packer_${PACKER_VERSION}_linux_amd64.zip -qO /tmp/packer.zip
+unzip -q -o -d /opt /tmp/packer.zip
+[ $? -eq 0 ] && echo "Done" || echo "Failed"
+
+rm -f /tmp/packer.zip
