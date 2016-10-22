@@ -6,7 +6,8 @@ Packer templates for creating **version control** images
 ### Prerequisites
 
 * Packer (>= 0.10.2)
-* any Linux distribution
+* QEMU (>=2.0.0)
+* libguestfs (>=1.24.0)
 
 
 ### Usage
