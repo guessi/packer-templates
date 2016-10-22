@@ -5,9 +5,11 @@ Packer templates for creating **version control** images
 
 ### Prerequisites
 
-* Packer (>= 0.10.2)
-* QEMU (>=2.0.0)
-* libguestfs (>=1.24.0)
+* Packer >= 0.10.2, recommend: >=0.11.0
+* QEMU >=2.0.0, recommend: >=2.5.0
+* libguestfs-tools >=1.24.0, recommend: >=1.26.0
+* RAM: 8G, recommend: 16G
+* partition space for /tmp: 4G, recommend: 8G
 
 
 ### Packer Installation
