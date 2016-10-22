@@ -10,7 +10,7 @@ if [ -d "/opt/packer" ]; then
   exit 1
 fi
 
-PACKER_VERSION="${PACKER_VERSION:-0.10.2}"
+PACKER_VERSION="${PACKER_VERSION:-0.11.0}"
 if [ -x "/opt/packer" ] && [ "${PACKER_VERSION}" = "$(/opt/packer --version)" ]; then
   echo "Skip, packer ${PACKER_VERSION} has already existed"
   exit 0

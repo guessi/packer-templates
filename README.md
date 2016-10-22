@@ -10,10 +10,18 @@ Packer templates for creating **version control** images
 * libguestfs (>=1.24.0)
 
 
-### Usage
+### Packer Installation
 
     $ sudo ./setup.sh
-    $ /opt/packer build <json>
+
+or specify version explicitly
+
+    $ sudo PACKER_VERSION=0.11.0 ./setup.sh
+
+
+### Usage
+
+    $ /opt/packer build <path-to-json>
 
 
 ### Support OS distributions
