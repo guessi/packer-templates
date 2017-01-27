@@ -28,7 +28,7 @@ or specify version explicitly
 
 ### Support OS distributions
 
-* Ubuntu Server 12.04 LTS
+* ~~Ubuntu Server 12.04 LTS~~
 * Ubuntu Server 14.04 LTS
 * Ubuntu Server 16.04 LTS
 
