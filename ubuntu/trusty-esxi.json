@@ -21,7 +21,7 @@
 
         "http_directory": "http"
     },
-    "min_packer_version": "0.10.2",
+    "min_packer_version": "1.0.0",
     "builders":
     [
         {
