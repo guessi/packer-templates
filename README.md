@@ -19,7 +19,7 @@ Packer templates for creating **version control** images
 
 ### Usage
 
-    $ /opt/packer build <path-to-json>
+    $ /usr/local/bin/packer build <path-to-json>
 
 
 ### Support OS distributions

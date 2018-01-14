@@ -23,7 +23,7 @@ if [ -d "${output}/${target}" ]; then
   export PACKER_LOG=1
   export PACKER_LOG_PATH="/var/log/packer/packer-${target}.log"
 
-  /opt/packer build ${json}
+  /usr/local/bin/packer build ${json}
   if [ $? -ne 0 ]; then
     echo "$(date): ${target} build failed"
     exit 1
