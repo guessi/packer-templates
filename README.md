@@ -24,9 +24,9 @@ Packer templates for creating **version control** images
 
 ### Support OS distributions
 
-* ~~Ubuntu Server 12.04 LTS~~
-* Ubuntu Server 14.04 LTS
-* Ubuntu Server 16.04 LTS
+* ~~Ubuntu Server 12.04 LTS (Precise Pangolin)~~
+* Ubuntu Server 14.04 LTS (Trusty Tahr)
+* Ubuntu Server 16.04 LTS (Xenial Xerus)
 
 
 ### Support output format
