@@ -5,7 +5,7 @@ Packer templates for creating **version control** images
 
 ### Prerequisites
 
-* Packer >= 1.0.0
+* Packer >= 1.1.2
 * QEMU >= 2.5.0
 * libguestfs-tools >= 1.32.2
 * RAM >= 8G
